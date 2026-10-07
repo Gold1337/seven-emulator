@@ -1,0 +1,5 @@
+if(EXISTS "C:/Users/root/Documents/kimi/workspace/deobf/third_party/sogen/deps/seven-emulator/build-tests/seven_tests[1]_tests.cmake")
+  include("C:/Users/root/Documents/kimi/workspace/deobf/third_party/sogen/deps/seven-emulator/build-tests/seven_tests[1]_tests.cmake")
+else()
+  add_test(seven_tests_NOT_BUILT seven_tests_NOT_BUILT)
+endif()

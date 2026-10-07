@@ -1,0 +1,10 @@
+^C:\USERS\ROOT\DOCUMENTS\KIMI\WORKSPACE\DEOBF\THIRD_PARTY\SOGEN\DEPS\SEVEN-EMULATOR\BUILD-TESTS\CMAKEFILES\16BB1706D086AD8820C87210EE19EEEF\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/root/Documents/kimi/workspace/deobf/third_party/sogen/deps/seven-emulator -BC:/Users/root/Documents/kimi/workspace/deobf/third_party/sogen/deps/seven-emulator/build-tests --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/root/Documents/kimi/workspace/deobf/third_party/sogen/deps/seven-emulator/build-tests/seven.slnx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

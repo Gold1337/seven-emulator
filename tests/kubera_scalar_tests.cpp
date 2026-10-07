@@ -347,6 +347,45 @@ TEST(KuberaScalar, RdrandTrapHookOverridesValue) {
   EXPECT_EQ(state.rip, kBase + 4);
 }
 
+TEST(KuberaScalar, Ud2RaisesInvalidOpcodeFaultWithoutHook) {
+  seven::Executor executor{};
+  seven::CpuState state{};
+  seven::Memory memory{};
+  state.mode = seven::ExecutionMode::long64;
+  state.rip = kBase;
+  state.rflags = 0x202;
+  memory.map(kBase, 0x1000);
+  write_bytes(memory, kBase, seven::parse_hex_bytes("0F 0B"));  // ud2
+
+  const auto result = executor.step(state, memory);
+  EXPECT_EQ(result.reason, seven::StopReason::invalid_opcode);
+  EXPECT_EQ(state.rip, kBase);  // faulting instruction does not retire
+}
+
+TEST(KuberaScalar, Ud2RaisesInvalidOpcodeTrapHook) {
+  seven::Executor executor{};
+  seven::CpuState state{};
+  seven::Memory memory{};
+  state.mode = seven::ExecutionMode::long64;
+  state.rip = kBase;
+  state.rflags = 0x202;
+  memory.map(kBase, 0x1000);
+  write_bytes(memory, kBase, seven::parse_hex_bytes("0F 0B"));  // ud2
+
+  const auto hook_id = executor.add_trap_hook(seven::TrapKind::invalid_opcode, [](seven::TrapHookContext& ctx) {
+    ctx.state.gpr[0] = 0xC000'001Dull;  // what a host would report as the exception code
+    seven::TrapHookResult result{};
+    result.action = seven::TrapHookAction::handled;
+    return result;
+  });
+  ASSERT_NE(hook_id, 0u);
+
+  const auto result = executor.step(state, memory);
+  ASSERT_EQ(result.reason, seven::StopReason::none);
+  EXPECT_EQ(state.gpr[0], 0xC000'001Dull);
+  EXPECT_EQ(state.rip, kBase + 2);  // handled trap advances past the ud2
+}
+
 TEST(KuberaScalar, RdseedTrapHookOverridesValue) {
   seven::Executor executor{};
   seven::CpuState state{};

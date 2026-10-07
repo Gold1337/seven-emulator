@@ -1,0 +1,385 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\executor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handler_helpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\aaa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\aad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\aadd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\aam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\aas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\arithmetic\aes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\arithmetic\simd_fp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\arithmetic\simd_int.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\arithmetic\simd_pack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\arithmetic\simd_shuffle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\arpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\bit_count.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\bmi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\bound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\bsf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\bsr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\bswap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\bt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\btc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\btr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\bts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\cbw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\cdq.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\cdqe.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\clac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\clflush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\clflushopt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\clts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\clwb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\cmpxchg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\cmpxchg486.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\call.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\cmov_setcc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\control.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\ja.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jae.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jbe.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\je.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jmp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jne.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jno.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jnp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jns.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\jp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\js.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\loop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\pop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\push.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\control_flow\ret.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\cqo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\cwd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\cwde.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\daa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\das.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\adc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\add.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\and.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\cmp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\mov_base.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\movbe.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\movdir.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\movs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\movsx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\movsxd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\movzx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\or.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\sbb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\shift.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\string_ops.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\sub.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\unary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\xchg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\data\xor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\div.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\enter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\idiv.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\imul.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\invd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\leave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\lfence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\mfence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\misc\nop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\misc\system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\mmx_x87.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\mul.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\pause.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\prefetch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\rdmsr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\rdpmc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\rdtscp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\rsm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\sfence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\simd_mov.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\smsw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\stac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\swapgs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\syscall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\sysenter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\sysexitd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\sysexitq.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\sysretd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\sysretq.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\ud0.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\ud1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\ud2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\wbinvd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\wrmsr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\x87_arithmetic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\x87_compare.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\x87_special.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\xadd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\xlat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\handlers\xsetbv.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\seven_core\src\snapshot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{6FE84610-696A-37A8-88C2-F49E01930EF6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,279 @@
+{
+  "tests": 51,
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "KuberaDebug",
+      "tests": 10,
+      "testsuite": [
+        {
+          "name": "ExecuteBreakpointAndRfSuppression",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_debug_tests.cpp",
+          "line": 53
+        },
+        {
+          "name": "MovSsSuppressesExecuteBreakpointAndDelaysTf",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_debug_tests.cpp",
+          "line": 88
+        },
+        {
+          "name": "RepMovsbDataBreakpointResumesWithRf",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_debug_tests.cpp",
+          "line": 130
+        },
+        {
+          "name": "RepMovsbExecuteBreakpointRestarts",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_debug_tests.cpp",
+          "line": 186
+        },
+        {
+          "name": "PopSsSuppressesExecuteBreakpointAndDelaysTf",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_debug_tests.cpp",
+          "line": 243
+        },
+        {
+          "name": "DelayedDataAndRfSemantics",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_debug_tests.cpp",
+          "line": 285
+        },
+        {
+          "name": "SsLoadInstructionDataBreakpointsAreDelayed",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_debug_tests.cpp",
+          "line": 356
+        },
+        {
+          "name": "DelayedSsLoadDataBreakpointIsLostOnFault",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_debug_tests.cpp",
+          "line": 429
+        },
+        {
+          "name": "DelayedDebugCombinesMultipleDr6Reasons",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_debug_tests.cpp",
+          "line": 480
+        },
+        {
+          "name": "DelayedDebugAfterMovSsEntersSoftwareInterruptHandlerFirst",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_debug_tests.cpp",
+          "line": 526
+        }
+      ]
+    },
+    {
+      "name": "KuberaScalar",
+      "tests": 21,
+      "testsuite": [
+        {
+          "name": "ImulAndMulFlagSemantics",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 9
+        },
+        {
+          "name": "DivIdivAndDivideErrorSemantics",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 36
+        },
+        {
+          "name": "IncAndShiftEdgeCases",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 74
+        },
+        {
+          "name": "WritablePagesAreReadable",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 96
+        },
+        {
+          "name": "RtlInterlockedFlushSListSequenceMatchesExpected",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 115
+        },
+        {
+          "name": "RtlInterlockedPushListSListSequenceMatchesExpected",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 158
+        },
+        {
+          "name": "OneOperandImul64HandlesNegativeHighHalf",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 205
+        },
+        {
+          "name": "JneRel32BranchesWhenZfClear",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 218
+        },
+        {
+          "name": "PrefetchDoesNotFaultUnmappedMemory",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 233
+        },
+        {
+          "name": "FxrstorReadsWritablePages",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 248
+        },
+        {
+          "name": "RdsspReportsNoShadowStack",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 265
+        },
+        {
+          "name": "RdrandR32SetsFlagsAndZeroExtends",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 275
+        },
+        {
+          "name": "RdrandR16PreservesUpperBits",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 291
+        },
+        {
+          "name": "RdrandR64SetsFlags",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 302
+        },
+        {
+          "name": "RdseedR32SetsFlagsAndZeroExtends",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 314
+        },
+        {
+          "name": "RdrandTrapHookOverridesValue",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 328
+        },
+        {
+          "name": "Ud2RaisesInvalidOpcodeFaultWithoutHook",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 350
+        },
+        {
+          "name": "Ud2RaisesInvalidOpcodeTrapHook",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 365
+        },
+        {
+          "name": "RdseedTrapHookOverridesValue",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 389
+        },
+        {
+          "name": "IretqRestoresRipCsFlagsRspAndSs",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 411
+        },
+        {
+          "name": "IretqIgnoresUpperBitsOfCsAndSsSlots",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_scalar_tests.cpp",
+          "line": 445
+        }
+      ]
+    },
+    {
+      "name": "KuberaSimd",
+      "tests": 20,
+      "testsuite": [
+        {
+          "name": "VpAndUsesExplicitSources",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 15
+        },
+        {
+          "name": "VaddssPreservesUpperLanesFromSrc1",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 36
+        },
+        {
+          "name": "SseCvtsi2ssConvertsAndPreservesUpperLanes",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 74
+        },
+        {
+          "name": "Sse2Cvttsd2siTruncates",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 96
+        },
+        {
+          "name": "Sse2Cvttss2siR64Truncates",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 113
+        },
+        {
+          "name": "Sse2Cvttss2siR32TruncatesTowardZero",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 130
+        },
+        {
+          "name": "Sse2Cvttss2siR64FromMemoryOperand",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 147
+        },
+        {
+          "name": "Sse2Cvttss2siR64IndefiniteOnNaN",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 167
+        },
+        {
+          "name": "Sse2Cvttss2siR32IndefiniteOnOverflow",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 184
+        },
+        {
+          "name": "Sse2Cvttss2siR64AcceptsInt32OverflowValues",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 201
+        },
+        {
+          "name": "Sse2PextrwExtractsSelectedWord",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 218
+        },
+        {
+          "name": "Sse3HaddpsProducesHorizontalSums",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 232
+        },
+        {
+          "name": "Sse42Crc32MatchesCastagnoliReference",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 263
+        },
+        {
+          "name": "AesEncMatchesReferenceRound",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 297
+        },
+        {
+          "name": "AesEncLastMatchesReferenceRound",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 314
+        },
+        {
+          "name": "AesImcMatchesReference",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 331
+        },
+        {
+          "name": "AesKeyGenAssistMatchesReference",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 348
+        },
+        {
+          "name": "AesDecMatchesReferenceRound",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 366
+        },
+        {
+          "name": "AesDecLastMatchesReferenceRound",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 383
+        },
+        {
+          "name": "PclmulqdqMatchesReferenceProduct",
+          "file": "C:\\Users\\root\\Documents\\kimi\\workspace\\deobf\\third_party\\sogen\\deps\\seven-emulator\\tests\\kubera_simd_tests.cpp",
+          "line": 400
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\block_encoder\block.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\block_encoder\block_encoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\block_encoder\call_instr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\block_encoder\instr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\block_encoder\ip_relmem_instr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\block_encoder\jcc_instr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\block_encoder\jmp_instr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\block_encoder\simple_br_instr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\block_encoder\simple_instr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\block_encoder\xbegin_instr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\code_assembler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\fn_asm_impl_0.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\fn_asm_impl_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\fn_asm_impl_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\fn_asm_impl_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\fn_asm_impl_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\fn_asm_impl_5.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\fn_asm_impl_6.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\fn_asm_impl_7.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\fn_asm_impl_8.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_asm\fn_asm_impl_9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\code_ext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\data_evex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\data_legacy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\data_mvex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\data_vex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\data_xop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\decoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\handlers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\handlers_d3now.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\handlers_evex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\handlers_fpu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\handlers_legacy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\handlers_mvex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\handlers_vex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\decoder\tables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\encoder\encoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\encoder\instruction_create.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\encoder\op_code_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\encoder\op_code_handlers_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\encoder\op_code_info.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\encoder\op_code_info_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\encoder\ops.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\buffered_string_output.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\fast\fast_fmt_tbl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\fast\fast_formatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\fast\fmt_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\fast\mem_size_tbl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\fast\regs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\fmt_common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\fmt_consts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\fmt_flow_control.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\fmt_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\fmt_utils_all.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\gas\fmt_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\gas\fmt_tbl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\gas\gas_formatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\gas\mem_size_tbl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\gas\regs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\intel\fmt_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\intel\fmt_tbl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\intel\intel_formatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\intel\mem_size_tbl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\masm\fmt_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\masm\info.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\masm\instruction_display.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\masm\masm_formatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\masm\mem_size_tbl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\nasm\fmt_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\nasm\info.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\nasm\mem_size_tbl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\nasm\nasm_formatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\nasm\regs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\num_fmt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\pseudo_ops.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\formatter\regs_tbl_ls.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\generated\enum_names.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\generated\instruction_memory_sizes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\generated\instruction_op_counts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\generated\memory_size_infos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\generated\mnemonics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\generated\reg_to_addr_size.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\generated\register_infos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\info\code_info.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\info\cpuid_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\info\info_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\info\instruction_info.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\info\instruction_info_factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\info\instruction_info_methods.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\info\rflags_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\instruction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\instruction_internal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\instruction_internal_imm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\mvex\mvex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\mvex\mvex_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\mvex\mvex_memsz_lut.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\iced_x86\src\mvex\mvex_tt_lut.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\root\Documents\kimi\workspace\deobf\third_party\sogen\deps\seven-emulator\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{6FE84610-696A-37A8-88C2-F49E01930EF6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

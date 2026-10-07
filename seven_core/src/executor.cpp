@@ -112,6 +112,13 @@ constexpr std::size_t kZmmWidth = 64;
     case iced_x86::Code::Rdseed_r32:
     case iced_x86::Code::Rdseed_r64:
       return TrapKind::rdseed;
+    case iced_x86::Code::Ud2:
+      // UD2 is a decodable instruction whose architectural behaviour is #UD.
+      // Route it through the invalid-opcode trap hooks before the core handler
+      // so hosts (e.g. the sogen windows emulator) can convert it into the
+      // guest-visible STATUS_ILLEGAL_INSTRUCTION; with no hook installed the
+      // core handler still produces the invalid_opcode fault.
+      return TrapKind::invalid_opcode;
     default:
       return std::nullopt;
   }
@@ -718,6 +725,27 @@ ExecutionResult Executor::step(CpuState& state, Memory& memory) {
       }
     }
 
+    // Execution hooks fire before trap hooks so hosts that track the current
+    // instruction through them (e.g. sogen's thread.current_ip, which feeds
+    // exception contexts) observe the trapping instruction itself — unicorn's
+    // UC_HOOK_CODE has the same before-everything ordering.
+    ExecutionContext ctx{state, memory, instr, next_rip, false};
+    if (has_execution_hooks_) {
+      for (auto& [id, hook] : execution_hooks_) {
+        (void)id;
+        hook(state.rip);
+      }
+    }
+    if (has_execution_address_hooks_) {
+      const auto exec_addr_it = execution_address_hooks_.find(state.rip);
+      if (exec_addr_it != execution_address_hooks_.end()) {
+        for (auto& [id, hook] : exec_addr_it->second) {
+          (void)id;
+          hook(state.rip);
+        }
+      }
+    }
+
     if (cache_entry.trap_kind != 0xFFu) {
       const auto trap_kind = static_cast<TrapKind>(cache_entry.trap_kind);
       if (trace_openkey_probe_) {
@@ -748,23 +776,6 @@ ExecutionResult Executor::step(CpuState& state, Memory& memory) {
         ++stop_reason_counts_[stop_reason_to_index(fault.reason)];
         notify_stop_hooks(state, memory, fault, state.rip);
         return fault;
-      }
-    }
-
-    ExecutionContext ctx{state, memory, instr, next_rip, false};
-    if (has_execution_hooks_) {
-      for (auto& [id, hook] : execution_hooks_) {
-        (void)id;
-        hook(state.rip);
-      }
-    }
-    if (has_execution_address_hooks_) {
-      const auto exec_addr_it = execution_address_hooks_.find(state.rip);
-      if (exec_addr_it != execution_address_hooks_.end()) {
-        for (auto& [id, hook] : exec_addr_it->second) {
-          (void)id;
-          hook(state.rip);
-        }
       }
     }
     const bool need_instruction_hooks = has_instruction_hooks_ || has_code_hooks_;
