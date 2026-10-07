@@ -104,6 +104,14 @@ constexpr std::size_t kZmmWidth = 64;
     case iced_x86::Code::Int_imm8:
     case iced_x86::Code::Into:
       return TrapKind::interrupt;
+    case iced_x86::Code::Rdrand_r16:
+    case iced_x86::Code::Rdrand_r32:
+    case iced_x86::Code::Rdrand_r64:
+      return TrapKind::rdrand;
+    case iced_x86::Code::Rdseed_r16:
+    case iced_x86::Code::Rdseed_r32:
+    case iced_x86::Code::Rdseed_r64:
+      return TrapKind::rdseed;
     default:
       return std::nullopt;
   }

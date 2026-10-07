@@ -58,6 +58,8 @@ enum class TrapKind : std::uint8_t {
   rdtscp,
   invalid_opcode,
   interrupt,
+  rdrand,
+  rdseed,
 };
 
 struct TrapHookContext {

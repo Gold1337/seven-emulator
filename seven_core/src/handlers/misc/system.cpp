@@ -1,7 +1,167 @@
 #include "seven/handlers_fwd.hpp"
 #include "seven/handler_helpers.hpp"
 
+#include <chrono>
+#include <cstdint>
+#include <random>
+
+#if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
+#include <intrin.h>
+#include <immintrin.h>
+#elif defined(__x86_64__) || defined(__i386__)
+#include <cpuid.h>
+#include <immintrin.h>
+#endif
+
+// x86 hosts execute the real RDRAND/RDSEED instructions; GCC/Clang need a
+// per-function target attribute to emit them without -mrdrnd/-mrdseed.
+#if defined(__x86_64__) || defined(__i386__) || defined(_M_X64) || defined(_M_IX86)
+#if defined(__GNUC__) || defined(__clang__)
+#define SEVEN_RDRAND_TARGET __attribute__((target("rdrnd")))
+#define SEVEN_RDSEED_TARGET __attribute__((target("rdseed")))
+#else
+#define SEVEN_RDRAND_TARGET
+#define SEVEN_RDSEED_TARGET
+#endif
+#else
+#define SEVEN_RDRAND_TARGET
+#define SEVEN_RDSEED_TARGET
+#endif
+
 namespace seven::handlers {
+
+namespace {
+
+std::uint64_t fallback_random_u64() {
+  // Software fallback for hosts without RDRAND/RDSEED (or non-x86 hosts):
+  // splitmix64 seeded from std::random_device, or the wall clock if that
+  // source is unavailable.
+  static thread_local std::uint64_t stream_state = [] {
+    std::uint64_t seed = 0;
+    try {
+      std::random_device device{};
+      seed = (static_cast<std::uint64_t>(device()) << 32) | device();
+    } catch (...) {
+      seed = static_cast<std::uint64_t>(
+          std::chrono::steady_clock::now().time_since_epoch().count());
+    }
+    return seed | 1u;
+  }();
+  stream_state += 0x9E3779B97F4A7C15ull;
+  auto mix = stream_state;
+  mix = (mix ^ (mix >> 30)) * 0xBF58476D1CE4E5B9ull;
+  mix = (mix ^ (mix >> 27)) * 0x94D049BB133111EBull;
+  return mix ^ (mix >> 31);
+}
+
+bool host_has_rdrand() {
+  static const bool supported = [] {
+#if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
+    int info[4]{};
+    __cpuidex(info, 1, 0);
+    return (static_cast<std::uint32_t>(info[2]) & (1u << 30)) != 0;
+#elif defined(__x86_64__) || defined(__i386__)
+    std::uint32_t eax = 0, ebx = 0, ecx = 0, edx = 0;
+    if (!__get_cpuid(1, &eax, &ebx, &ecx, &edx)) return false;
+    return (ecx & (1u << 30)) != 0;
+#else
+    return false;
+#endif
+  }();
+  return supported;
+}
+
+bool host_has_rdseed() {
+  static const bool supported = [] {
+#if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
+    int info[4]{};
+    __cpuidex(info, 7, 0);
+    return (static_cast<std::uint32_t>(info[1]) & (1u << 18)) != 0;
+#elif defined(__x86_64__) || defined(__i386__)
+    std::uint32_t eax = 0, ebx = 0, ecx = 0, edx = 0;
+    if (!__get_cpuid_count(7, 0, &eax, &ebx, &ecx, &edx)) return false;
+    return (ebx & (1u << 18)) != 0;
+#else
+    return false;
+#endif
+  }();
+  return supported;
+}
+
+SEVEN_RDRAND_TARGET bool host_rdrand_u64(std::uint64_t& value) {
+#if (defined(_M_X64) || defined(__x86_64__))
+  return _rdrand64_step(reinterpret_cast<unsigned long long*>(&value)) != 0;
+#elif (defined(_M_IX86) || defined(__i386__))
+  std::uint32_t low = 0;
+  if (_rdrand32_step(&low) == 0) return false;
+  std::uint32_t high = 0;
+  if (_rdrand32_step(&high) == 0) return false;
+  value = (static_cast<std::uint64_t>(high) << 32) | low;
+  return true;
+#else
+  (void)value;
+  return false;
+#endif
+}
+
+SEVEN_RDSEED_TARGET bool host_rdseed_u64(std::uint64_t& value) {
+#if (defined(_M_X64) || defined(__x86_64__))
+  return _rdseed64_step(reinterpret_cast<unsigned long long*>(&value)) != 0;
+#elif (defined(_M_IX86) || defined(__i386__))
+  std::uint32_t low = 0;
+  if (_rdseed32_step(&low) == 0) return false;
+  std::uint32_t high = 0;
+  if (_rdseed32_step(&high) == 0) return false;
+  value = (static_cast<std::uint64_t>(high) << 32) | low;
+  return true;
+#else
+  (void)value;
+  return false;
+#endif
+}
+
+// Bounded retry per the SDM guidance (RDRAND typically succeeds immediately;
+// RDSEED may legitimately return CF=0 under entropy starvation, and a guest
+// spin loop must not deadlock the emulator, so failures exhaust into the
+// software fallback).
+std::uint64_t random_from_host(bool rdseed) {
+  const bool feature_present = rdseed ? host_has_rdseed() : host_has_rdrand();
+  if (feature_present) {
+    for (int attempt = 0; attempt < 10; ++attempt) {
+      std::uint64_t value = 0;
+      const bool ok = rdseed ? host_rdseed_u64(value) : host_rdrand_u64(value);
+      if (ok) return value;
+    }
+  }
+  return fallback_random_u64();
+}
+
+}  // namespace
+
+// RDRAND/RDSEED defaults, used when no TrapKind::rdrand/rdseed hook handles
+// the instruction: fill the destination register and set EFLAGS per the SDM
+// (CF = value returned, OF/SF/ZF/AF/PF cleared).
+void emulate_rdrand_defaults(CpuState& state, iced_x86::Register dest, std::size_t width) {
+  const auto value = random_from_host(false);
+  detail::write_register(state, dest, value, width);
+  detail::set_flag(state.rflags, kFlagCF, true);
+  detail::set_flag(state.rflags, kFlagOF, false);
+  detail::set_flag(state.rflags, kFlagSF, false);
+  detail::set_flag(state.rflags, kFlagZF, false);
+  detail::set_flag(state.rflags, kFlagAF, false);
+  detail::set_flag(state.rflags, kFlagPF, false);
+}
+
+void emulate_rdseed_defaults(CpuState& state, iced_x86::Register dest, std::size_t width) {
+  const auto value = random_from_host(true);
+  detail::write_register(state, dest, value, width);
+  detail::set_flag(state.rflags, kFlagCF, true);
+  detail::set_flag(state.rflags, kFlagOF, false);
+  detail::set_flag(state.rflags, kFlagSF, false);
+  detail::set_flag(state.rflags, kFlagZF, false);
+  detail::set_flag(state.rflags, kFlagAF, false);
+  detail::set_flag(state.rflags, kFlagPF, false);
+}
 
 ExecutionResult handle_code_CLC(ExecutionContext& ctx) {
   detail::set_flag(ctx.state.rflags, kFlagCF, false);
@@ -144,6 +304,36 @@ ExecutionResult handle_code_CPUID(ExecutionContext& ctx) {
   detail::write_register(ctx.state, iced_x86::Register::EBX, ebx, 4);
   detail::write_register(ctx.state, iced_x86::Register::ECX, ecx, 4);
   detail::write_register(ctx.state, iced_x86::Register::EDX, edx, 4);
+  return {};
+}
+
+ExecutionResult handle_code_RDRAND_R16(ExecutionContext& ctx) {
+  emulate_rdrand_defaults(ctx.state, ctx.instr.op_register(0), 2);
+  return {};
+}
+
+ExecutionResult handle_code_RDRAND_R32(ExecutionContext& ctx) {
+  emulate_rdrand_defaults(ctx.state, ctx.instr.op_register(0), 4);
+  return {};
+}
+
+ExecutionResult handle_code_RDRAND_R64(ExecutionContext& ctx) {
+  emulate_rdrand_defaults(ctx.state, ctx.instr.op_register(0), 8);
+  return {};
+}
+
+ExecutionResult handle_code_RDSEED_R16(ExecutionContext& ctx) {
+  emulate_rdseed_defaults(ctx.state, ctx.instr.op_register(0), 2);
+  return {};
+}
+
+ExecutionResult handle_code_RDSEED_R32(ExecutionContext& ctx) {
+  emulate_rdseed_defaults(ctx.state, ctx.instr.op_register(0), 4);
+  return {};
+}
+
+ExecutionResult handle_code_RDSEED_R64(ExecutionContext& ctx) {
+  emulate_rdseed_defaults(ctx.state, ctx.instr.op_register(0), 8);
   return {};
 }
 

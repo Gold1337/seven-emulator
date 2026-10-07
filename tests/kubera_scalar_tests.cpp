@@ -272,5 +272,101 @@ TEST(KuberaScalar, RdsspReportsNoShadowStack) {
              });
 }
 
+TEST(KuberaScalar, RdrandR32SetsFlagsAndZeroExtends) {
+  run_single(seven::parse_hex_bytes("0F C7 F0"),  // rdrand eax
+             [](seven::CpuState& state, seven::Memory&) {
+               state.gpr[0] = 0xDEAD'BEEF'1111'1111ull;
+             },
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               EXPECT_NE(state.rflags & seven::kFlagCF, 0u);
+               EXPECT_EQ(state.rflags & seven::kFlagOF, 0u);
+               EXPECT_EQ(state.rflags & seven::kFlagSF, 0u);
+               EXPECT_EQ(state.rflags & seven::kFlagZF, 0u);
+               EXPECT_EQ(state.rflags & seven::kFlagAF, 0u);
+               EXPECT_EQ(state.rflags & seven::kFlagPF, 0u);
+               EXPECT_EQ(state.gpr[0] >> 32, 0u);
+             });
+}
+
+TEST(KuberaScalar, RdrandR16PreservesUpperBits) {
+  run_single(seven::parse_hex_bytes("66 0F C7 F0"),  // rdrand ax
+             [](seven::CpuState& state, seven::Memory&) {
+               state.gpr[0] = 0x1111'2222'3333'4444ull;
+             },
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               EXPECT_NE(state.rflags & seven::kFlagCF, 0u);
+               EXPECT_EQ(state.gpr[0] >> 16, 0x1111'2222'3333ull);
+             });
+}
+
+TEST(KuberaScalar, RdrandR64SetsFlags) {
+  run_single(seven::parse_hex_bytes("48 0F C7 F0"),  // rdrand rax
+             [](seven::CpuState& state, seven::Memory&) {
+               state.rflags = seven::kFlagZF | seven::kFlagSF;
+             },
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               EXPECT_NE(state.rflags & seven::kFlagCF, 0u);
+               EXPECT_EQ(state.rflags & seven::kFlagZF, 0u);
+               EXPECT_EQ(state.rflags & seven::kFlagSF, 0u);
+             });
+}
+
+TEST(KuberaScalar, RdseedR32SetsFlagsAndZeroExtends) {
+  run_single(seven::parse_hex_bytes("0F C7 F8"),  // rdseed eax
+             [](seven::CpuState& state, seven::Memory&) {
+               state.gpr[0] = 0xDEAD'BEEF'1111'1111ull;
+             },
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               EXPECT_NE(state.rflags & seven::kFlagCF, 0u);
+               EXPECT_EQ(state.rflags & seven::kFlagOF, 0u);
+               EXPECT_EQ(state.rflags & seven::kFlagZF, 0u);
+               EXPECT_EQ(state.rflags & seven::kFlagSF, 0u);
+               EXPECT_EQ(state.gpr[0] >> 32, 0u);
+             });
+}
+
+TEST(KuberaScalar, RdrandTrapHookOverridesValue) {
+  seven::Executor executor{};
+  seven::CpuState state{};
+  seven::Memory memory{};
+  state.mode = seven::ExecutionMode::long64;
+  state.rip = kBase;
+  state.rflags = 0x202;
+  memory.map(kBase, 0x1000);
+  write_bytes(memory, kBase, seven::parse_hex_bytes("48 0F C7 F0"));  // rdrand rax
+  const auto hook_id = executor.add_trap_hook(seven::TrapKind::rdrand, [](seven::TrapHookContext& ctx) {
+    ctx.state.gpr[0] = 0x1234'5678'9ABC'DEF0ull;
+    seven::TrapHookResult result{};
+    result.action = seven::TrapHookAction::handled;
+    return result;
+  });
+  ASSERT_NE(hook_id, 0u);
+  const auto result = executor.step(state, memory);
+  ASSERT_EQ(result.reason, seven::StopReason::none);
+  EXPECT_EQ(state.gpr[0], 0x1234'5678'9ABC'DEF0ull);
+  EXPECT_EQ(state.rip, kBase + 4);
+}
+
+TEST(KuberaScalar, RdseedTrapHookOverridesValue) {
+  seven::Executor executor{};
+  seven::CpuState state{};
+  seven::Memory memory{};
+  state.mode = seven::ExecutionMode::long64;
+  state.rip = kBase;
+  state.rflags = 0x202;
+  memory.map(kBase, 0x1000);
+  write_bytes(memory, kBase, seven::parse_hex_bytes("48 0F C7 F8"));  // rdseed rax
+  const auto hook_id = executor.add_trap_hook(seven::TrapKind::rdseed, [](seven::TrapHookContext& ctx) {
+    ctx.state.gpr[0] = 0x0FED'CBA9'8765'4321ull;
+    seven::TrapHookResult result{};
+    result.action = seven::TrapHookAction::handled;
+    return result;
+  });
+  ASSERT_NE(hook_id, 0u);
+  const auto result = executor.step(state, memory);
+  ASSERT_EQ(result.reason, seven::StopReason::none);
+  EXPECT_EQ(state.gpr[0], 0x0FED'CBA9'8765'4321ull);
+  EXPECT_EQ(state.rip, kBase + 4);
+}
 
 }  // namespace
