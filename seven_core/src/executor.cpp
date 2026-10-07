@@ -708,6 +708,30 @@ ExecutionResult Executor::step(CpuState& state, Memory& memory) {
       const auto exec_hit_bits = collect_execute_breakpoint_hits(state, instruction_start_rip);
       if (exec_hit_bits != 0) {
         state.dr[6] |= exec_hit_bits;
+        // Internally-raised debug exceptions have no INT instruction, so offer
+        // them to interrupt trap hooks directly (with the vector forced to 1)
+        // before falling back to IDT dispatch.
+        TrapHookContext int_trap_ctx{state, memory, instr, instruction_start_rip, TrapKind::interrupt};
+        int_trap_ctx.forced_interrupt = 1;
+        const auto int_trap_result = run_trap_hooks(int_trap_ctx);
+        if (int_trap_result.action == TrapHookAction::handled) {
+          if (state.rip == instruction_start_rip) {
+            state.rip = mask_instruction_pointer(state, instruction_start_rip);
+          }
+          state.gpr[4] = mask_stack_pointer(state, state.gpr[4]);
+          return {StopReason::none, 0, std::nullopt, reported_code};
+        }
+        if (int_trap_result.action == TrapHookAction::stop) {
+          const auto fault = int_trap_result.stop_result.value_or(
+              ExecutionResult{StopReason::general_protection, 0, ExceptionInfo{StopReason::general_protection, state.rip, 0}, reported_code});
+          if (try_recover_fault(fault, fault_address_of(fault, state.rip))) {
+            continue;
+          }
+          record_violation(fault, fault_address_of(fault, state.rip));
+          ++stop_reason_counts_[stop_reason_to_index(fault.reason)];
+          notify_stop_hooks(state, memory, fault, state.rip);
+          return fault;
+        }
         ExecutionContext db_ctx{state, memory, instr, next_rip, false};
         const auto db_result = detail::dispatch_interrupt(db_ctx, 1u, instruction_start_rip);
         if (db_result.reason != StopReason::none) {
@@ -860,6 +884,36 @@ ExecutionResult Executor::step(CpuState& state, Memory& memory) {
         state.dr[6] |= data_hit_bits;
         state.pending_debug_hit_bits = 0;
         const auto return_rip = state.rip;
+        // Internally-raised debug exceptions have no INT instruction, so offer
+        // them to interrupt trap hooks directly (with the vector forced to 1)
+        // before falling back to IDT dispatch. `state.rip` already points at
+        // the interrupted-next instruction; passing it as next_rip keeps the
+        // "skip the trapping instruction" hook convention a no-op.
+        TrapHookContext int_trap_ctx{state, memory, instr, return_rip, TrapKind::interrupt};
+        int_trap_ctx.forced_interrupt = 1;
+        const auto int_trap_result = run_trap_hooks(int_trap_ctx);
+        if (int_trap_result.action == TrapHookAction::handled) {
+          if (state.rip == instruction_start_rip) {
+            state.rip = next_rip;
+          }
+          state.gpr[4] = mask_stack_pointer(state, state.gpr[4]);
+          if (collect_code_stats_ && static_cast<std::size_t>(instr.code()) < code_execution_counts_.size()) {
+            ++code_execution_counts_[static_cast<std::size_t>(instr.code())];
+          }
+          if (collect_code_stats_) { ++total_retired_; }
+          return {StopReason::none, 1, std::nullopt, reported_code};
+        }
+        if (int_trap_result.action == TrapHookAction::stop) {
+          const auto fault = int_trap_result.stop_result.value_or(
+              ExecutionResult{StopReason::general_protection, 0, ExceptionInfo{StopReason::general_protection, state.rip, 0}, reported_code});
+          if (try_recover_fault(fault, fault_address_of(fault, state.rip))) {
+            continue;
+          }
+          record_violation(fault, fault_address_of(fault, state.rip));
+          ++stop_reason_counts_[stop_reason_to_index(fault.reason)];
+          notify_stop_hooks(state, memory, fault, state.rip);
+          return fault;
+        }
         ExecutionContext db_ctx{state, memory, instr, return_rip, false};
         const auto db_result = detail::dispatch_interrupt(db_ctx, 1u, return_rip, std::nullopt, ctx.push_rf_for_debug);
         if (db_result.reason != StopReason::none) {

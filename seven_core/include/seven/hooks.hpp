@@ -68,6 +68,11 @@ struct TrapHookContext {
   const iced_x86::Instruction& instr;
   std::uint64_t next_rip;
   TrapKind kind = TrapKind::invalid_opcode;
+  // Vector of an internally-raised interrupt (e.g. the #DB single-step or
+  // data-breakpoint fault, which has no INT instruction to decode). Only set
+  // for TrapKind::interrupt hooks raised by the core itself; instruction-driven
+  // interrupts leave it empty and hooks derive the vector from `instr`.
+  std::optional<int> forced_interrupt;
 };
 
 enum class TrapHookAction : std::uint8_t {
