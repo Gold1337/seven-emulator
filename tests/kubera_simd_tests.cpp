@@ -110,6 +110,111 @@ TEST(KuberaSimd, Sse2Cvttsd2siTruncates) {
              });
 }
 
+TEST(KuberaSimd, Sse2Cvttss2siR64Truncates) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Cvttss2si_r64_xmmm32,
+      iced_x86::Register::RAX,
+      iced_x86::Register::XMM1).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "cvttss2si rax, xmm1"));
+
+  run_single(bytes,
+             [](seven::CpuState& state, seven::Memory&) {
+               set_xmm_scalar<float>(state, 1, 3.75f);
+             },
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               EXPECT_EQ(state.gpr[0], 3u);
+             });
+}
+
+TEST(KuberaSimd, Sse2Cvttss2siR32TruncatesTowardZero) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Cvttss2si_r32_xmmm32,
+      iced_x86::Register::EAX,
+      iced_x86::Register::XMM1).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "cvttss2si eax, xmm1"));
+
+  run_single(bytes,
+             [](seven::CpuState& state, seven::Memory&) {
+               set_xmm_scalar<float>(state, 1, -3.75f);
+             },
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               EXPECT_EQ(state.gpr[0], 0xFFFF'FFFDull);
+             });
+}
+
+TEST(KuberaSimd, Sse2Cvttss2siR64FromMemoryOperand) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Cvttss2si_r64_xmmm32,
+      iced_x86::Register::RAX,
+      iced_x86::MemoryOperand::with_base_displ_bcst_seg(iced_x86::Register::RCX, 0, false,
+                                                        iced_x86::Register::None)).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "cvttss2si rax, dword ptr [rcx]"));
+
+  run_single(bytes,
+             [](seven::CpuState& state, seven::Memory& memory) {
+               state.gpr[1] = kBase + 0x800;
+               const auto bits = std::bit_cast<std::uint32_t>(2.75f);
+               ASSERT_TRUE(memory.write(kBase + 0x800, &bits, sizeof(bits)));
+             },
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               EXPECT_EQ(state.gpr[0], 2u);
+             });
+}
+
+TEST(KuberaSimd, Sse2Cvttss2siR64IndefiniteOnNaN) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Cvttss2si_r64_xmmm32,
+      iced_x86::Register::RAX,
+      iced_x86::Register::XMM1).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "cvttss2si rax, xmm1"));
+
+  run_single(bytes,
+             [](seven::CpuState& state, seven::Memory&) {
+               set_xmm_u32x4(state, 1, 0x7FC0'0000u, 0, 0, 0);  // quiet NaN
+             },
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               EXPECT_EQ(state.gpr[0], 0x8000'0000'0000'0000ull);
+             });
+}
+
+TEST(KuberaSimd, Sse2Cvttss2siR32IndefiniteOnOverflow) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Cvttss2si_r32_xmmm32,
+      iced_x86::Register::EAX,
+      iced_x86::Register::XMM1).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "cvttss2si eax, xmm1"));
+
+  run_single(bytes,
+             [](seven::CpuState& state, seven::Memory&) {
+               set_xmm_scalar<float>(state, 1, 3.0e9f);  // fits float, exceeds int32
+             },
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               EXPECT_EQ(state.gpr[0], 0x8000'0000ull);
+             });
+}
+
+TEST(KuberaSimd, Sse2Cvttss2siR64AcceptsInt32OverflowValues) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Cvttss2si_r64_xmmm32,
+      iced_x86::Register::RAX,
+      iced_x86::Register::XMM1).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "cvttss2si rax, xmm1"));
+
+  run_single(bytes,
+             [](seven::CpuState& state, seven::Memory&) {
+               set_xmm_scalar<float>(state, 1, 3.0e9f);  // exceeds int32, fits int64
+             },
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               EXPECT_EQ(state.gpr[0], 3000000000ull);
+             });
+}
+
 TEST(KuberaSimd, Sse2PextrwExtractsSelectedWord) {
   std::vector<std::uint8_t> bytes{0x66, 0x0F, 0xC5, 0xC1, 0x01};
 

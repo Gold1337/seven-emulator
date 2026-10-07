@@ -1100,6 +1100,34 @@ ExecutionResult handle_code_CVTTSD2SI_R64_XMMM64(ExecutionContext& ctx) {
   return {};
 }
 
+ExecutionResult handle_code_CVTTSS2SI_R32_XMMM32(ExecutionContext& ctx) {
+  bool ok = false;
+  const auto src_bits = read_operand(ctx, 1, sizeof(float), &ok);
+  if (!ok) return detail::memory_fault(ctx, detail::memory_address(ctx));
+  const auto input = unpack_lane<float>(src_bits, 0);
+  const auto [bits, exceptions] = convert_fp_to_int_bits<std::int32_t>(ctx.state, input, true);
+  if (exceptions != 0) {
+    auto result = sse_exception(ctx, exceptions);
+    if (!result.ok()) return result;
+  }
+  detail::write_register(ctx.state, ctx.instr.op_register(0), bits, 4);
+  return {};
+}
+
+ExecutionResult handle_code_CVTTSS2SI_R64_XMMM32(ExecutionContext& ctx) {
+  bool ok = false;
+  const auto src_bits = read_operand(ctx, 1, sizeof(float), &ok);
+  if (!ok) return detail::memory_fault(ctx, detail::memory_address(ctx));
+  const auto input = unpack_lane<float>(src_bits, 0);
+  const auto [bits, exceptions] = convert_fp_to_int_bits<std::int64_t>(ctx.state, input, true);
+  if (exceptions != 0) {
+    auto result = sse_exception(ctx, exceptions);
+    if (!result.ok()) return result;
+  }
+  detail::write_register(ctx.state, ctx.instr.op_register(0), bits, 8);
+  return {};
+}
+
 ExecutionResult handle_code_CVTPI2PD_XMM_MMM64(ExecutionContext& ctx) {
   if (ctx.instr.op_kind(0) != iced_x86::OpKind::Register || !is_vector_register(ctx.instr.op_register(0))) {
     return detail::memory_fault(ctx, detail::memory_address(ctx));
