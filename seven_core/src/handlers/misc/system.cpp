@@ -277,33 +277,99 @@ ExecutionResult handle_code_RDTSC(ExecutionContext& ctx) {
   return {};
 }
 
-ExecutionResult handle_code_CPUID(ExecutionContext& ctx) {
-  const auto leaf = static_cast<std::uint32_t>(detail::read_register(ctx.state, iced_x86::Register::EAX));
-  const auto subleaf = static_cast<std::uint32_t>(detail::read_register(ctx.state, iced_x86::Register::ECX));
+// Deterministic CPUID profile mirroring the values Unicorn (default qemu64
+// CPU model) presents to the guest, so both backends expose an identical
+// feature set to guest code. Guest code (ntdll extended-context handling,
+// bcryptprimitives' entropy/SymCrypt feature detection, ...) selects its
+// implementation paths from these leaves, so a weaker feature set silently
+// reroutes guest control flow.
+//
+// Masked-off feature bits must correspond to instructions this core does not
+// implement: F16C (bit 29) stays masked because VCVTPH2PS/VCVTPS2PH have no
+// handlers. RDRAND/RDSEED are advertised and implemented (see
+// emulate_rdrand_defaults/emulate_rdseed_defaults), as are AES-NI, PCLMULQDQ,
+// BMI1/2 and the VEX forms the advertised leaves imply.
+void emulate_cpuid_defaults(CpuState& state) {
+  const auto leaf = static_cast<std::uint32_t>(detail::read_register(state, iced_x86::Register::EAX));
+  const auto subleaf = static_cast<std::uint32_t>(detail::read_register(state, iced_x86::Register::ECX));
   std::uint32_t eax = 0;
   std::uint32_t ebx = 0;
   std::uint32_t ecx = 0;
   std::uint32_t edx = 0;
-  if (leaf == 0) {
-    eax = 1;
-    ebx = 0x756E6547;
-    edx = 0x49656E69;
+  if (leaf == 0x00000000) {
+    eax = 0x0000000D;  // max standard leaf
+    ebx = 0x756E6547;  // "Genu" "ineI" "ntel"
     ecx = 0x6C65746E;
-  } else if (leaf == 1) {
-    eax = 0x000306A9;
-    ebx = 0x00100800;
-    ecx = 0;
-    edx = 0x0183F3FF;
-  } else if (leaf == 7 && subleaf == 0) {
-    eax = 0;
-    ebx = 0;
-    ecx = 0;
-    edx = 0;
+    edx = 0x49656E69;
+  } else if (leaf == 0x00000001) {
+    eax = 0x000306C4;
+    ebx = 0x00000800;
+    ecx = 0xCED82203u & ~(1u << 29);  // clear F16C (not implemented); RDRAND advertised
+    edx = 0x078BFBFD;
+  } else if (leaf == 0x00000002) {
+    eax = 0x00000001;
+    edx = 0x002C307D;
+  } else if (leaf == 0x00000004 && subleaf <= 3) {
+    constexpr std::uint32_t cache[4][4] = {
+      {0x00000121, 0x01C0003F, 0x0000003F, 0x00000001},
+      {0x00000122, 0x01C0003F, 0x0000003F, 0x00000001},
+      {0x00000143, 0x03C0003F, 0x00000FFF, 0x00000001},
+      {0x00000000, 0x00000000, 0x00000000, 0x00000000},
+    };
+    eax = cache[subleaf][0];
+    ebx = cache[subleaf][1];
+    ecx = cache[subleaf][2];
+    edx = cache[subleaf][3];
+  } else if (leaf == 0x00000007 && subleaf == 0) {
+    eax = 0x00000000;
+    ebx = 0x00000389;  // FSGSBASE, BMI1, SMEP, BMI2, ERMS
+    ecx = 0x00000000;
+    edx = 0x00000000;
+  } else if (leaf == 0x0000000D && subleaf == 0) {
+    eax = 0x00000007;  // x87 + SSE XSAVE area
+    ebx = 0x00000240;
+    ecx = 0x00000340;
+    edx = 0x00000000;
+  } else if (leaf == 0x0000000D && subleaf == 1) {
+    eax = 0x00000001;
+    ebx = 0x00000000;
+    ecx = 0x00000000;
+    edx = 0x00000000;
+  } else if (leaf == 0x0000000D && subleaf == 2) {
+    eax = 0x00000100;
+    ebx = 0x00000240;
+    ecx = 0x00000000;
+    edx = 0x00000000;
+  } else if (leaf == 0x80000000) {
+    eax = 0x80000008;
+    ebx = 0x756E6547;
+    ecx = 0x6C65746E;
+    edx = 0x49656E69;
+  } else if (leaf == 0x80000001) {
+    eax = 0x000306C4;
+    ebx = 0x00000000;
+    ecx = 0x00000021;
+    edx = 0x28100800;
+  } else if (leaf == 0x80000002) {
+    // "Intel Core Processor (qemu64-ish)" brand fragment from unicorn
+    eax = 0x65746E49;
+    ebx = 0x6F43206C;
+    ecx = 0x50206572;
+    edx = 0x65636F72;
+  } else {
+    // Remaining leaves: report zero (matches unicorn's behaviour for
+    // unimplemented leaves in practice).
+    return;
   }
-  detail::write_register(ctx.state, iced_x86::Register::EAX, eax, 4);
-  detail::write_register(ctx.state, iced_x86::Register::EBX, ebx, 4);
-  detail::write_register(ctx.state, iced_x86::Register::ECX, ecx, 4);
-  detail::write_register(ctx.state, iced_x86::Register::EDX, edx, 4);
+
+  detail::write_register(state, iced_x86::Register::EAX, eax, 4);
+  detail::write_register(state, iced_x86::Register::EBX, ebx, 4);
+  detail::write_register(state, iced_x86::Register::ECX, ecx, 4);
+  detail::write_register(state, iced_x86::Register::EDX, edx, 4);
+}
+
+ExecutionResult handle_code_CPUID(ExecutionContext& ctx) {
+  emulate_cpuid_defaults(ctx.state);
   return {};
 }
 

@@ -17,6 +17,13 @@ namespace handlers {
 void emulate_rdrand_defaults(CpuState& state, iced_x86::Register dest, std::size_t width);
 void emulate_rdseed_defaults(CpuState& state, iced_x86::Register dest, std::size_t width);
 
+// Deterministic CPUID profile (see the definition for the rationale and the
+// masked-off bits). This is BOTH the core's built-in CPUID behaviour (used
+// when no TrapKind::cpuid hook handles the instruction) and the defaults a
+// frontend applies after its own CPUID hook ran without skipping the
+// instruction, so every entry point presents the same feature set.
+void emulate_cpuid_defaults(CpuState& state);
+
 }  // namespace handlers
 }  // namespace seven
 
