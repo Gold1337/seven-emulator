@@ -357,9 +357,13 @@ TEST(KuberaSimd, AesKeyGenAssistMatchesReference) {
   run_single(bytes,
              setup_aes_state,
              [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
-               // Reference bytes: F35947F028AED2A66859C46309CF4F3C
-               EXPECT_EQ(xmm_u64(state, 0, 0), 0xA6D2'AE28'F047'59F3ull);
-               EXPECT_EQ(xmm_u64(state, 0, 1), 0x3C4F'CF09'63C4'5968ull);
+               // Raw-hardware reference (AESKEYGENASSIST xmm, FIPS-197 key, imm=1):
+               // memory bytes 34E4B524 E5B52434 018A84EB 8B84EB01. In LE dword
+               // terms: DEST[31:0]=SubWord(X1), DEST[63:32]=SubWord(RotWord(X1))^rcon,
+               // DEST[95:64]=SubWord(X3), DEST[127:96]=SubWord(RotWord(X3))^rcon
+               // (rcon XORed into the first memory byte of each rotated dword).
+               EXPECT_EQ(xmm_u64(state, 0, 0), 0x3424'B5E5'24B5'E434ull);
+               EXPECT_EQ(xmm_u64(state, 0, 1), 0x01EB'848B'EB84'8A01ull);
              });
 }
 

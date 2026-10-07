@@ -363,20 +363,25 @@ ExecutionResult handle_code_AESKEYGENASSIST_XMM_XMMM128_IMM8(ExecutionContext& c
   auto src = aes_read_operand_bytes(ctx, 1, kXmmBytes, &ok);
   if (!ok) return detail::memory_fault(ctx, detail::memory_address(ctx));
 
-  const auto rcon = static_cast<std::uint32_t>(ctx.instr.immediate8() & 0xFFu) << 24;
+  const auto rcon = static_cast<std::uint32_t>(ctx.instr.immediate8() & 0xFFu);
   std::array<std::uint8_t, kXmmBytes> out{};
 
+  // Hardware semantics (verified against the raw instruction): for each source
+  // doubleword pair (X1 = SRC[63:32], X3 = SRC[127:96], as little-endian u32),
+  // the destination pair is SubWord of the plain word followed by SubWord of
+  // the AES RotWord'd word, with the RCON byte XORed into the FIRST (lowest)
+  // byte of the rotated dword in memory. X0/X2 are not read.
   const auto apply = [&](std::size_t out_offset, std::size_t in_offset) {
     std::uint32_t word = 0;
     std::memcpy(&word, src.data() + in_offset, sizeof(word));
-    const auto converted = aes_sub_word(aes_rot_word(word)) ^ rcon;
-    std::memcpy(out.data() + out_offset, &converted, sizeof(converted));
+    const auto plain = aes_sub_word(word);
+    const auto rotated = aes_sub_word(aes_rot_word(word)) ^ rcon;
+    std::memcpy(out.data() + out_offset, &plain, sizeof(plain));
+    std::memcpy(out.data() + out_offset + 4, &rotated, sizeof(rotated));
   };
 
-  apply(0, 0);                       // DEST[31:0] = SubWord(RotWord(SRC[31:0])) ^ RCON
-  std::memcpy(out.data() + 4, src.data() + 4, 4);  // DEST[63:32] = SRC[63:32]
-  apply(8, 8);                       // DEST[95:64] = SubWord(RotWord(SRC[95:64])) ^ RCON
-  std::memcpy(out.data() + 12, src.data() + 12, 4);  // DEST[127:96] = SRC[127:96]
+  apply(0, 4);   // DEST[31:0]/DEST[63:32] from X1
+  apply(8, 12);  // DEST[95:64]/DEST[127:96] from X3
 
   aes_write_register_bytes(ctx, kXmmBytes, out.data(), false);
   return {};
