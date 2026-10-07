@@ -296,6 +296,52 @@ ExecutionResult handle_code_PSHUFLW_XMM_XMMM128_IMM8(ExecutionContext& ctx) {
   });
 }
 
+ExecutionResult handle_code_PSHUFB_XMM_XMMM128(ExecutionContext& ctx) {
+  // Legacy SSSE3 form: the destination register supplies the data bytes AND
+  // receives the result; operand 1 is the per-byte selection mask.
+  if (ctx.instr.op_kind(0) != iced_x86::OpKind::Register || !is_vector_register(ctx.instr.op_register(0))) {
+    return detail::memory_fault(ctx, detail::memory_address(ctx));
+  }
+  bool ok = false;
+  const auto dst_reg = ctx.instr.op_register(0);
+  const auto width = vector_width(dst_reg);
+  const auto sel_bits = read_operand(ctx, 1, width, &ok);
+  if (!ok) return detail::memory_fault(ctx, detail::memory_address(ctx));
+  const auto data_bits = read_vec(ctx.state, dst_reg);
+
+  big_uint out = 0;
+  for (std::size_t i = 0; i < width; ++i) {
+    const auto sel = static_cast<std::uint8_t>((sel_bits >> (i * 8)) & 0xFFu);
+    const auto byte = (sel & 0x80u) != 0 ? static_cast<std::uint8_t>(0)
+                                         : static_cast<std::uint8_t>((data_bits >> ((sel & 0x0Fu) * 8)) & 0xFFu);
+    out |= big_uint(byte) << (i * 8);
+  }
+  write_vec(ctx.state, dst_reg, out);
+  return {};
+}
+
+ExecutionResult handle_code_VPSHUFB_XMM_XMM_XMMM128(ExecutionContext& ctx) {
+  return vex_binary_lanewise<std::uint8_t, 16>(ctx, kXmmBytes, [](const auto& sel, const auto& data) {
+    std::array<std::uint8_t, 16> out{};
+    for (std::size_t i = 0; i < 16; ++i) {
+      out[i] = (sel[i] & 0x80u) != 0 ? static_cast<std::uint8_t>(0) : data[sel[i] & 0x0Fu];
+    }
+    return out;
+  });
+}
+
+ExecutionResult handle_code_VPSHUFB_YMM_YMM_YMMM256(ExecutionContext& ctx) {
+  return vex_binary_lanewise<std::uint8_t, 32>(ctx, kYmmBytes, [](const auto& sel, const auto& data) {
+    std::array<std::uint8_t, 32> out{};
+    for (std::size_t i = 0; i < 32; ++i) {
+      // Two independent 128-bit lanes: each lane selects within itself.
+      const auto lane_base = (i >= 16) ? 16u : 0u;
+      out[i] = (sel[i] & 0x80u) != 0 ? static_cast<std::uint8_t>(0) : data[lane_base + (sel[i] & 0x0Fu)];
+    }
+    return out;
+  });
+}
+
 ExecutionResult handle_code_PSHUFHW_XMM_XMMM128_IMM8(ExecutionContext& ctx) {
   const auto imm = ctx.instr.immediate8();
   return legacy_unary_lanewise<std::uint16_t, 8>(ctx, kXmmBytes, [imm](const auto& src) {

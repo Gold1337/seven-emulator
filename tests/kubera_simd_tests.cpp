@@ -279,4 +279,141 @@ TEST(KuberaSimd, Sse42Crc32MatchesCastagnoliReference) {
              });
 }
 
+namespace {
+
+// XMM0 = 00 01 02 ... 0F; XMM1 = FIPS-197 AES-128 key bytes.
+void setup_aes_state(seven::CpuState& state, seven::Memory&) {
+  set_xmm_u64(state, 0, 0x0706'0504'0302'0100ull, 0x0F0E'0D0C'0B0A'0908ull);
+  set_xmm_u64(state, 1, 0xA6D2'AE28'1615'7E2Bull, 0x3C4F'CF09'8815'F7ABull);
+}
+
+constexpr std::uint64_t kAesDstLow = 0x0706'0504'0302'0100ull;
+constexpr std::uint64_t kAesDstHigh = 0x0F0E'0D0C'0B0A'0908ull;
+constexpr std::uint64_t kAesKeyLow = 0xA6D2'AE28'1615'7E2Bull;
+constexpr std::uint64_t kAesKeyHigh = 0x3C4F'CF09'8815'F7ABull;
+
+}  // namespace
+
+TEST(KuberaSimd, AesEncMatchesReferenceRound) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Aesenc_xmm_xmmm128,
+      iced_x86::Register::XMM0,
+      iced_x86::Register::XMM1).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "aesenc xmm0, xmm1"));
+
+  run_single(bytes,
+             setup_aes_state,
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               // Reference bytes: F7E1C30453491441606E532EE9482E1B
+               EXPECT_EQ(xmm_u64(state, 0, 0), 0xF7E1'C304'5349'1441ull);
+               EXPECT_EQ(xmm_u64(state, 0, 1), 0x606E'532E'E948'2E1Bull);
+             });
+}
+
+TEST(KuberaSimd, AesEncLastMatchesReferenceRound) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Aesenclast_xmm_xmmm128,
+      iced_x86::Register::XMM0,
+      iced_x86::Register::XMM1).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "aesenclast xmm0, xmm1"));
+
+  run_single(bytes,
+             setup_aes_state,
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               // Reference bytes: 48157260DAAF79DD9B20624DF7B32017
+               EXPECT_EQ(xmm_u64(state, 0, 0), 0xDD79'AFDA'6072'1548ull);
+               EXPECT_EQ(xmm_u64(state, 0, 1), 0x1720'B3F7'4D62'209Bull);
+             });
+}
+
+TEST(KuberaSimd, AesImcMatchesReference) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Aesimc_xmm_xmmm128,
+      iced_x86::Register::XMM0,
+      iced_x86::Register::XMM1).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "aesimc xmm0, xmm1"));
+
+  run_single(bytes,
+             setup_aes_state,
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               // Reference bytes: A2DC55D9073BC3A9DDC05FF7BA695C4E
+               EXPECT_EQ(xmm_u64(state, 0, 0), 0xA2DC'55D9'073B'C3A9ull);
+               EXPECT_EQ(xmm_u64(state, 0, 1), 0xDDC0'5FF7'BA69'5C4Eull);
+             });
+}
+
+TEST(KuberaSimd, AesKeyGenAssistMatchesReference) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with3(
+      iced_x86::Code::Aeskeygenassist_xmm_xmmm128_imm8,
+      iced_x86::Register::XMM0,
+      iced_x86::Register::XMM1,
+      static_cast<std::int32_t>(1)).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "aeskeygenassist xmm0, xmm1, 1"));
+
+  run_single(bytes,
+             setup_aes_state,
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               // Reference bytes: F35947F028AED2A66859C46309CF4F3C
+               EXPECT_EQ(xmm_u64(state, 0, 0), 0xA6D2'AE28'F047'59F3ull);
+               EXPECT_EQ(xmm_u64(state, 0, 1), 0x3C4F'CF09'63C4'5968ull);
+             });
+}
+
+TEST(KuberaSimd, AesDecMatchesReferenceRound) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Aesdec_xmm_xmmm128,
+      iced_x86::Register::XMM0,
+      iced_x86::Register::XMM1).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "aesdec xmm0, xmm1"));
+
+  run_single(bytes,
+             setup_aes_state,
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               // Reference bytes: C8FBB7060A83DD386DD472CF3AE7B8BC
+               EXPECT_EQ(xmm_u64(state, 0, 0), 0xC8FB'B706'0A83'DD38ull);
+               EXPECT_EQ(xmm_u64(state, 0, 1), 0x6DD4'72CF'3AE7'B8BCull);
+             });
+}
+
+TEST(KuberaSimd, AesDecLastMatchesReferenceRound) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with2(
+      iced_x86::Code::Aesdeclast_xmm_xmmm128,
+      iced_x86::Register::XMM0,
+      iced_x86::Register::XMM1).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "aesdeclast xmm0, xmm1"));
+
+  run_single(bytes,
+             setup_aes_state,
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               // Reference bytes: 3805A7182EB68D79E9EA8F88737FC114
+               EXPECT_EQ(xmm_u64(state, 0, 0), 0x3805'A718'2EB6'8D79ull);
+               EXPECT_EQ(xmm_u64(state, 0, 1), 0xE9EA'8F88'737F'C114ull);
+             });
+}
+
+TEST(KuberaSimd, PclmulqdqMatchesReferenceProduct) {
+  std::vector<std::uint8_t> bytes;
+  const auto instr = iced_x86::Instruction::with3(
+      iced_x86::Code::Pclmulqdq_xmm_xmmm128_imm8,
+      iced_x86::Register::XMM0,
+      iced_x86::Register::XMM1,
+      static_cast<std::int32_t>(0x00)).value();
+  ASSERT_TRUE(encode_to_bytes(instr, bytes, "pclmulqdq xmm0, xmm1, 0"));
+
+  run_single(bytes,
+             setup_aes_state,
+             [](const seven::ExecutionResult&, const seven::CpuState& state, const seven::Memory&) {
+               // Reference bytes: 002B28941244ED3B1A14243E9AE97303
+               EXPECT_EQ(xmm_u64(state, 0, 0), 0x3BED'4412'9428'2B00ull);
+               EXPECT_EQ(xmm_u64(state, 0, 1), 0x0373'E99A'3E24'141Aull);
+             });
+}
+
+
 }  // namespace

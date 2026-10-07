@@ -369,4 +369,68 @@ TEST(KuberaScalar, RdseedTrapHookOverridesValue) {
   EXPECT_EQ(state.rip, kBase + 4);
 }
 
+TEST(KuberaScalar, IretqRestoresRipCsFlagsRspAndSs) {
+  // IRETQ pops five qword slots: RIP, CS, RFLAGS, RSP, SS. ntdll's user-mode
+  // exception restore (RtlRestoreContext) ends in iretq and relies on the
+  // RSP/SS fields being honoured.
+  seven::Executor executor{};
+  seven::CpuState state{};
+  seven::Memory memory{};
+  state.mode = seven::ExecutionMode::long64;
+  state.rip = kBase;
+  state.rflags = 0x202;
+  memory.map(kBase, 0x1000);
+  memory.map(0x4000, 0x1000);
+  write_bytes(memory, kBase, seven::parse_hex_bytes("48 CF"));  // iretq
+
+  // Build the iretq frame at 0x4000.
+  const std::uint64_t new_rsp = 0x4000 + 0x100;
+  const std::array<std::uint64_t, 5> frame{
+      0x1234'5678'9ABC'DEF0ull,  // RIP
+      0x33,                      // CS (qword slot, low 16 used)
+      0x246,                     // RFLAGS
+      new_rsp,                   // RSP
+      0x2B};                     // SS (qword slot, low 16 used)
+  ASSERT_TRUE(memory.write(0x4000, frame.data(), frame.size() * 8));
+  state.gpr[4] = 0x4000;
+
+  const auto result = executor.step(state, memory);
+  ASSERT_EQ(result.reason, seven::StopReason::none);
+  EXPECT_EQ(state.rip, 0x1234'5678'9ABC'DEF0ull);
+  EXPECT_EQ(state.sreg[1], 0x33u);             // CS
+  EXPECT_EQ(state.sreg[2], 0x2Bu);             // SS
+  EXPECT_EQ(state.rflags & 0xFFFFFFFFull, 0x246u);
+  EXPECT_EQ(state.gpr[4], new_rsp);            // RSP restored from the frame, not old rsp + slots
+}
+
+TEST(KuberaScalar, IretqIgnoresUpperBitsOfCsAndSsSlots) {
+  seven::Executor executor{};
+  seven::CpuState state{};
+  seven::Memory memory{};
+  state.mode = seven::ExecutionMode::long64;
+  state.rip = kBase;
+  state.rflags = 0x202;
+  memory.map(kBase, 0x1000);
+  memory.map(0x4000, 0x1000);
+  write_bytes(memory, kBase, seven::parse_hex_bytes("48 CF"));  // iretq
+
+  // ntdll's restore stub writes only the low word into the CS/SS slots; the
+  // upper bytes are stale stack data and must be ignored on load.
+  const std::array<std::uint64_t, 5> frame{
+      kBase + 0x20,                    // RIP
+      0xAAAA'AAAA'AAAA'0033ull,        // CS slot with garbage upper bits
+      0x202,                           // RFLAGS
+      0x4000 + 0x80,                   // RSP
+      0xBBBB'BEBB'BBBB'B2B2ull};       // SS slot with garbage upper bits
+  ASSERT_TRUE(memory.write(0x4000, frame.data(), frame.size() * 8));
+  state.gpr[4] = 0x4000;
+
+  const auto result = executor.step(state, memory);
+  ASSERT_EQ(result.reason, seven::StopReason::none);
+  EXPECT_EQ(state.rip, kBase + 0x20);
+  EXPECT_EQ(state.sreg[1], 0x33u);
+  EXPECT_EQ(state.sreg[2], 0xB2B2u & 0xFFFFu);
+  EXPECT_EQ(state.gpr[4], 0x4000 + 0x80);
+}
+
 }  // namespace

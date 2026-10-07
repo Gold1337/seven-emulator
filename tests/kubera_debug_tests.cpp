@@ -566,8 +566,10 @@ TEST(KuberaDebug, DelayedDebugAfterMovSsEntersSoftwareInterruptHandlerFirst) {
   
   std::uint64_t db_return_rip = 0;
   std::uint64_t int3_return_rip = 0;
+  // The #DB frame (innermost) is five pointer-wide slots: RIP, CS, RFLAGS, RSP,
+  // SS (0x28 bytes); the nested int3 frame's RIP sits directly above it.
   (void)memory.read(state.gpr[4], &db_return_rip, sizeof(db_return_rip));
-  (void)memory.read(state.gpr[4] + 18, &int3_return_rip, sizeof(int3_return_rip));
+  (void)memory.read(state.gpr[4] + 0x28, &int3_return_rip, sizeof(int3_return_rip));
   EXPECT_EQ(db_return_rip, kInt3Handler);
   EXPECT_EQ(int3_return_rip, kBase + 3);
   

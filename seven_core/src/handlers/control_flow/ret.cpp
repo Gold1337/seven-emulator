@@ -34,28 +34,61 @@ ExecutionResult retf_width(ExecutionContext& ctx, std::size_t offset_width, std:
 
 ExecutionResult iret_width(ExecutionContext& ctx, std::size_t offset_width, std::size_t flags_width) {
   std::uint64_t target = 0;
+  std::uint64_t selector = 0;
+  std::uint64_t flags = 0;
+
+  if (offset_width == 2) {
+    // 16-bit IRET (real mode) pops IP, CS and FLAGS only.
+    if (auto result = pop_width(ctx, target, 2); !result.ok()) {
+      return result;
+    }
+    if (auto result = pop_width(ctx, selector, 2); !result.ok()) {
+      return result;
+    }
+    if (auto result = pop_width(ctx, flags, 2); !result.ok()) {
+      return result;
+    }
+
+    ctx.state.mode = mode_for_far_width(offset_width);
+    ctx.state.sreg[1] = static_cast<std::uint16_t>(selector);
+    ctx.state.rip = mask_instruction_pointer(ctx.state, target);
+    ctx.state.rflags = (ctx.state.rflags & ~0xFFFFull) | (flags & 0xFFFFull);
+    ctx.control_flow_taken = true;
+    return {};
+  }
+
+  // 32- and 64-bit IRET pop five fields: EIP/RIP, CS, EFLAGS, ESP/RSP and SS
+  // (SDM Vol. 2, IRET). The CS and SS stack slots are pointer-width even though
+  // only their low 16 bits are loaded; ntdll's user-mode exception restore
+  // (RtlRestoreContext -> iretq) relies on the RSP/SS fields being honoured.
+  std::uint64_t new_sp = 0;
+  std::uint64_t ss = 0;
   if (auto result = pop_width(ctx, target, offset_width); !result.ok()) {
     return result;
   }
-  std::uint64_t selector = 0;
-  if (auto result = pop_width(ctx, selector, 2); !result.ok()) {
+  if (auto result = pop_width(ctx, selector, offset_width); !result.ok()) {
     return result;
   }
-  std::uint64_t flags = 0;
-  if (auto result = pop_width(ctx, flags, flags_width); !result.ok()) {
+  if (auto result = pop_width(ctx, flags, offset_width); !result.ok()) {
+    return result;
+  }
+  if (auto result = pop_width(ctx, new_sp, offset_width); !result.ok()) {
+    return result;
+  }
+  if (auto result = pop_width(ctx, ss, offset_width); !result.ok()) {
     return result;
   }
 
   ctx.state.mode = mode_for_far_width(offset_width);
   ctx.state.sreg[1] = static_cast<std::uint16_t>(selector);
+  ctx.state.sreg[2] = static_cast<std::uint16_t>(ss);
   ctx.state.rip = mask_instruction_pointer(ctx.state, target);
   if (flags_width == 8) {
-    ctx.state.rflags = flags;
-  } else if (flags_width == 4) {
-    ctx.state.rflags = (ctx.state.rflags & ~0xFFFFFFFFull) | (flags & 0xFFFFFFFFull);
+    ctx.state.rflags = flags & 0xFFFFFFFFull;
   } else {
-    ctx.state.rflags = (ctx.state.rflags & ~0xFFFFull) | (flags & 0xFFFFull);
+    ctx.state.rflags = (ctx.state.rflags & ~0xFFFFFFFFull) | (flags & 0xFFFFFFFFull);
   }
+  ctx.state.gpr[4] = mask_stack_pointer(ctx.state, new_sp);
   ctx.control_flow_taken = true;
   return {};
 }

@@ -251,14 +251,40 @@ ExecutionResult dispatch_interrupt(ExecutionContext& ctx, std::uint8_t vector, s
   const auto return_width = instruction_pointer_width(ctx.state.mode);
   const auto flags_width = instruction_pointer_width(ctx.state.mode);
   const auto pushed_rflags = push_rf_in_frame ? (ctx.state.rflags | kFlagRF) : ctx.state.rflags;
-  if (auto result = push_width(pushed_rflags, flags_width); !result.ok()) {
-    return result;
-  }
-  if (auto result = push_width(ctx.state.sreg[1], 2); !result.ok()) {
-    return result;
-  }
-  if (auto result = push_width(return_rip, return_width); !result.ok()) {
-    return result;
+
+  if (return_width == 2) {
+    // Real mode pushes the 6-byte frame: FLAGS, CS, IP.
+    if (auto result = push_width(pushed_rflags, flags_width); !result.ok()) {
+      return result;
+    }
+    if (auto result = push_width(ctx.state.sreg[1], 2); !result.ok()) {
+      return result;
+    }
+    if (auto result = push_width(return_rip, return_width); !result.ok()) {
+      return result;
+    }
+  } else {
+    // 32- and 64-bit modes push the five-slot frame SS, RSP, RFLAGS, CS, RIP:
+    // 64-bit mode always pushes SS:RSP, and IRET in these modes always pops and
+    // loads all five fields. Slots are pointer-width; the CS/SS slots carry the
+    // selector in their low 16 bits only. The pushed RSP is the interrupted
+    // stack pointer, captured before the frame itself lowers it.
+    const auto interrupted_sp = ctx.state.gpr[4];
+    if (auto result = push_width(ctx.state.sreg[2], return_width); !result.ok()) {
+      return result;
+    }
+    if (auto result = push_width(interrupted_sp, return_width); !result.ok()) {
+      return result;
+    }
+    if (auto result = push_width(pushed_rflags, flags_width); !result.ok()) {
+      return result;
+    }
+    if (auto result = push_width(ctx.state.sreg[1], return_width); !result.ok()) {
+      return result;
+    }
+    if (auto result = push_width(return_rip, return_width); !result.ok()) {
+      return result;
+    }
   }
   if (error_code.has_value()) {
     if (auto result = push_width(error_code.value(), flags_width); !result.ok()) {
