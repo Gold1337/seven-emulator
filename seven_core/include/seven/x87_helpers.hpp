@@ -544,8 +544,15 @@ inline ExecutionResult x87_store_bcd(ExecutionContext& ctx) {
 }
 
 inline ExecutionResult x87_store_st0_to_sti(ExecutionContext& ctx, bool pop) {
-  if (ctx.instr.op_kind(1) != iced_x86::OpKind::Register) return detail::memory_fault(ctx, detail::memory_address(ctx));
-  const auto dst = ctx.instr.op_register(1);
+  // iced decodes `fstp st(i)` (DD D8+i, DF D0+i, DF D8+i) with a SINGLE register
+  // operand: op0 = ST(i), the stored source ST(0) is implicit and has no operand
+  // slot. op_count() == 1 for these encodings, so op_kind(1)/op_register(1) are
+  // undefined - the previous code read the destination from op1 and got a garbage
+  // register index, writing st(0) into an arbitrary physical register (and
+  // marking it valid), which corrupted the x87 stack of any guest using the
+  // canonical `fstp st(0)` stack-pop idiom.
+  if (ctx.instr.op_kind(0) != iced_x86::OpKind::Register) return detail::memory_fault(ctx, detail::memory_address(ctx));
+  const auto dst = ctx.instr.op_register(0);
   const auto idx = x87_st_index(dst);
   if (ctx.state.x87_is_empty(0)) return x87_stack_underflow(ctx);
   ctx.state.x87_set(idx, ctx.state.x87_get(0));
