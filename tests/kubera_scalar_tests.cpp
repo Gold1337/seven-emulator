@@ -472,4 +472,194 @@ TEST(KuberaScalar, IretqIgnoresUpperBitsOfCsAndSsSlots) {
   EXPECT_EQ(state.gpr[4], 0x4000 + 0x80);
 }
 
+namespace {
+
+// Runs a multi-instruction sequence from kBase until RIP reaches the sentinel
+// return address parked on the stack (or the step budget runs out).
+void run_sequence(seven::CpuState& state, seven::Memory& memory, const std::vector<std::uint8_t>& code) {
+  state.mode = seven::ExecutionMode::long64;
+  state.rip = kBase;
+  state.rflags = 0x202;
+  memory.map(kBase, code.size() + 0x100);
+  memory.map(kBase + 0x100000, 0x20000);
+  ASSERT_TRUE(memory.write(kBase, code.data(), code.size()));
+  // Park RSP in the middle of the stack mapping so a called function's frame
+  // (below RSP) and the sentinel return slot (at RSP) are both mapped.
+  constexpr std::uint64_t kSentinel = kBase + 0x108000;
+  state.gpr[4] = kSentinel;
+  ASSERT_TRUE(memory.write(state.gpr[4], &kSentinel, 8));
+  seven::Executor executor{};
+  for (int steps = 0; steps < 256; ++steps) {
+    if (state.rip == kSentinel) return;
+    const auto result = executor.step(state, memory);
+    ASSERT_EQ(result.reason, seven::StopReason::none) << "step " << steps;
+  }
+  FAIL() << "sequence did not reach the sentinel return address";
+}
+
+std::uint8_t x87_abridged_tags(const seven::CpuState& state) {
+  std::uint8_t bits = 0;
+  for (std::size_t i = 0; i < 8; ++i) {
+    if (state.x87_tags[i] != 0x3) bits |= static_cast<std::uint8_t>(1u << i);
+  }
+  return bits;
+}
+
+}  // namespace
+
+// Regression: `fstp st(0)` (DD D8) decodes with a SINGLE register operand in
+// iced (op0 = ST(i), the stored source ST(0) implicit). The handler used to read
+// the destination from the nonexistent op1 and wrote st(0) into an arbitrary
+// physical register, leaving a phantom "valid" tag on the stack.
+TEST(KuberaScalar, FstpStiSingleOperandPopsWithoutPhantomTags) {
+  seven::Executor executor{};
+  seven::CpuState state{};
+  seven::Memory memory{};
+  state.mode = seven::ExecutionMode::long64;
+  state.rip = kBase;
+  state.rflags = 0x202;
+  memory.map(kBase, 0x1000);
+  write_bytes(memory, kBase, seven::parse_hex_bytes("DD D8"));  // fstp st(0), st(0)
+
+  state.set_x87_top(7);
+  state.x87_tags.fill(0x3);
+  state.x87_tags[7] = 0x0;  // only phys7 valid
+  state.x87_set(0, seven::Float80(2.0));
+
+  const auto result = executor.step(state, memory);
+  ASSERT_EQ(result.reason, seven::StopReason::none);
+  EXPECT_EQ(state.x87_top, 0u);
+  for (std::size_t i = 0; i < 8; ++i) {
+    EXPECT_EQ(state.x87_tags[i], 0x3u) << "phys " << i << " must be empty";
+  }
+}
+
+// Regression: `fst st(i)` (DD D0+i) also decodes as a single operand; the
+// source ST(0) used to be read from the nonexistent op1.
+TEST(KuberaScalar, FstStiStoresSt0IntoTheAddressedRegister) {
+  seven::Executor executor{};
+  seven::CpuState state{};
+  seven::Memory memory{};
+  state.mode = seven::ExecutionMode::long64;
+  state.rip = kBase;
+  state.rflags = 0x202;
+  memory.map(kBase, 0x1000);
+  write_bytes(memory, kBase, seven::parse_hex_bytes("DD D3"));  // fst st(3)
+
+  state.set_x87_top(0);
+  state.x87_tags.fill(0x3);
+  state.x87_tags[0] = 0x0;
+  state.x87_set(0, seven::Float80(42));
+  const auto st0 = state.x87_get(0);
+
+  const auto result = executor.step(state, memory);
+  ASSERT_EQ(result.reason, seven::StopReason::none);
+  EXPECT_EQ(state.x87_top, 0u);
+  // st(3) aliases phys3 with top=0; it must now hold st(0)'s value and be valid.
+  EXPECT_EQ(state.x87_get(3).val.signif, st0.val.signif);
+  EXPECT_EQ(state.x87_get(3).val.signExp, st0.val.signExp);
+  EXPECT_EQ(state.x87_tags[3], 0x0u);
+  // No phantom tags anywhere else.
+  EXPECT_EQ(x87_abridged_tags(state), 0x09u);  // phys0 + phys3
+}
+
+// Regression: FLDCW used to reject any control word with bits 0xE0C0 set -
+// which covers every legitimate value (0x027F, 0x037F, and the canonical
+// CW | 0x0C00 truncate pattern), so guest rounding-mode switches faulted.
+TEST(KuberaScalar, FldcwAcceptsRoundControlBitsAndFistTruncates) {
+  seven::CpuState state{};
+  seven::Memory memory{};
+  // Mirrors the corpus VmcAsmX87 pattern: save CW, set RC=truncate, fist, restore.
+  const std::vector<std::uint8_t> code = seven::parse_hex_bytes(
+      "48 83 EC 40"                // sub rsp, 0x40
+      " 48 C7 04 24 39 30 00 00"   // mov qword ptr [rsp], 0x3039 (12345)
+      " DF 2C 24"                  // fild qword ptr [rsp]
+      " D9 7C 24 10"               // fnstcw [rsp+0x10]
+      " 66 8B 44 24 10"            // mov ax, [rsp+0x10]
+      " 66 0D 00 0C"               // or ax, 0xC00
+      " 66 89 44 24 12"            // mov [rsp+0x12], ax
+      " D9 6C 24 12"               // fldcw [rsp+0x12]
+      " DB 5C 24 18"               // fist dword ptr [rsp+0x18]
+      " D9 6C 24 10"               // fldcw [rsp+0x10]
+      " 8B 44 24 18"               // mov eax, [rsp+0x18]
+      " 48 83 C4 40"               // add rsp, 0x40
+      " C3");                      // ret
+  state.x87_control_word = 0x027F;  // Windows initial thread state
+  run_sequence(state, memory, code);
+  EXPECT_EQ(state.x87_control_word, 0x027Fu);
+  EXPECT_EQ(state.gpr[0], 12345u);  // exact truncation of 12345.0
+}
+
+// Full x87 smoke sequence lifted from the ollvm corpus (VmcAsmX87). Expected
+// values were produced by executing the identical bytes on hardware; they cover
+// fild/fld1/faddp/fld/fmulp/fsqrt/fnstcw/fldcw/fist/fldln2/fldz/fcomip/fstp.
+TEST(KuberaScalar, VmcAsmX87SequenceMatchesHardware) {
+  const std::vector<std::uint8_t> code = seven::parse_hex_bytes(
+      "48 83 EC 40"
+      " 48 8B C1 48 25 FF FF FF 00 48 83 C8 01 48 89 04 24"
+      " DF 2C 24 D9 E8 DE C1 D9 C0 DE C9 D9 FA"
+      " D9 7C 24 10 66 8B 44 24 10 66 0D 00 0C 66 89 44 24 12"
+      " D9 6C 24 12 DB 54 24 18 D9 6C 24 10"
+      " D9 ED DE C9 D9 EE DF F1"
+      " 41 0F 92 C2 4D 0F B6 D2 DD D8"
+      " 48 0F B7 44 24 10 48 25 00 0F 00 00 8B 54 24 18 48 63 D2"
+      " 48 33 C2 49 03 C2 48 83 C4 40 C3");
+  struct Case { std::uint64_t input, expected; };
+  const Case cases[] = {
+      {0ull, 0x0000000000000203ull},
+      {4099ull, 0x0000000000001205ull},
+      {0x12345ull, 0x0000000000012147ull},
+      {0xFFFFull, 0x0000000000010201ull},
+      {0xABCDEull, 0x00000000000ABEE1ull},
+      {0xFFFFFFull, 0x0000000001000201ull},
+  };
+  for (const auto& c : cases) {
+    seven::CpuState state{};
+    seven::Memory memory{};
+    state.x87_control_word = 0x027F;  // Windows initial thread state
+    state.gpr[1] = c.input;
+    run_sequence(state, memory, code);
+    EXPECT_EQ(state.gpr[0], c.expected) << "input " << c.input;
+    // The sequence must leave an empty stack (fresh state for the next caller).
+    EXPECT_EQ(x87_abridged_tags(state), 0x00u);
+  }
+}
+
+// MMX packed-integer smoke sequence lifted from the ollvm corpus (VmcAsmMmx).
+// Expected values were produced by executing the identical bytes on hardware.
+TEST(KuberaScalar, MmxPackedSequenceMatchesHardware) {
+  const std::vector<std::uint8_t> code = seven::parse_hex_bytes(
+      "48 0F 6E C1"        // movq mm0, rcx
+      " 48 0F 6E CA"       // movq mm1, rdx
+      " 0F FD C1"          // paddw mm0, mm1
+      " 0F EF C8"          // pxor mm1, mm0
+      " 0F 73 F0 0D"       // psllq mm0, 13
+      " 0F F8 C1"          // psubb mm0, mm1
+      " 0F D5 C1"          // pmullw mm0, mm1
+      " 0F DB C8"          // pand mm1, mm0
+      " 0F EB C1"          // por mm0, mm1
+      " 0F 63 C1"          // packsswb mm0, mm1
+      " 0F 60 C1"          // punpcklbw mm0, mm1
+      " 48 0F 7E C0"       // movq rax, mm0
+      " 0F 77"             // emms
+      " C3");
+  struct Case { std::uint64_t a, b, expected; };
+  const Case cases[] = {
+      {0x1122334455667788ull, 0x0F0F0F0F0F0F0F0Full, 0x4380707F89808080ull},
+      {0x0123456789ABCDEFull, 0x1234567890ABCDEFull, 0x8880847F52801180ull},
+      {0xFEDCBA9876543210ull, 0x00000000FFFFFFFFull, 0x89800C7F8D800080ull},
+      {0x8000000000000001ull, 0x7FFFFFFF00000001ull, 0x0080000000000380ull},
+  };
+  for (const auto& c : cases) {
+    seven::CpuState state{};
+    seven::Memory memory{};
+    state.gpr[1] = c.a;
+    state.gpr[2] = c.b;
+    run_sequence(state, memory, code);
+    EXPECT_EQ(state.gpr[0], c.expected) << "inputs " << c.a << "," << c.b;
+    // EMMS must leave every x87 tag empty.
+    EXPECT_EQ(x87_abridged_tags(state), 0x00u);
+  }
+}
+
 }  // namespace
